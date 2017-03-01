@@ -3,7 +3,7 @@
 const ServerConnection = require('logux-sync').ServerConnection
 const MemoryStore = require('logux-core').MemoryStore
 const NanoEvents = require('nanoevents')
-const WebSocket = require('ws')
+const WebSocketServer = require('uws').Server
 const shortid = require('shortid')
 const https = require('https')
 const http = require('http')
@@ -272,7 +272,7 @@ class BaseServer {
     let promise = Promise.resolve()
 
     if (this.listenOptions.server) {
-      this.ws = new WebSocket.Server({ server: this.listenOptions.server })
+      this.ws = new WebSocketServer({ server: this.listenOptions.server })
     } else {
       const before = []
       if (this.listenOptions.key && !isPem(this.listenOptions.key)) {
@@ -295,7 +295,7 @@ class BaseServer {
             this.http = http.createServer()
           }
 
-          this.ws = new WebSocket.Server({ server: this.http })
+          this.ws = new WebSocketServer({ server: this.http })
 
           this.ws.on('error', reject)
 
